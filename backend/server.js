@@ -5,23 +5,25 @@ const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER || 'gangadevieyehospital@gmail.com',
-        pass: process.env.EMAIL_PASS || 'bhardwaj@122' // Replace with proper 16-character app password
-    }
-});
-
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 5000;
 const HOST = process.env.HOST || '0.0.0.0';
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || 'gangadevirewari';
 const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '';
 const databasePath = path.join(__dirname, 'database.sqlite');
 const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+const allowedOrigins = FRONTEND_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean);
+const transporter = process.env.EMAIL_USER && process.env.EMAIL_PASS
+    ? nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS,
+        },
+    })
+    : null;
 
-app.use(cors(FRONTEND_ORIGIN ? { origin: FRONTEND_ORIGIN } : undefined));
+app.use(cors(allowedOrigins.length ? { origin: allowedOrigins } : undefined));
 app.use(express.json({ limit: '20kb' }));
 
 const isBlank = (value) => typeof value !== 'string' || value.trim().length === 0;
@@ -116,9 +118,11 @@ app.post('/api/appointments', (req, res) => {
             const doctorQuery = "SELECT name FROM doctors WHERE id = ?";
             db.get(doctorQuery, [values.doctorId], (docErr, docRow) => {
                 const docName = docRow ? docRow.name : "Unknown Doctor";
+                if (!transporter) return;
+
                 const mailOptions = {
-                    from: process.env.EMAIL_USER || 'gangadevieyehospital@gmail.com',
-                    to: 'gangadevieyehospital@gmail.com',
+                    from: process.env.EMAIL_USER,
+                    to: process.env.NOTIFICATION_EMAIL || process.env.EMAIL_USER,
                     subject: `New Appointment Booking: ${values.name}`,
                     text: `A new appointment has been successfully booked!\n\nPatient Details:\nName: ${values.name}\nPhone: ${values.phone}\nEmail: ${values.email}\nDate: ${values.date}\nDoctor: ${docName}`
                 };

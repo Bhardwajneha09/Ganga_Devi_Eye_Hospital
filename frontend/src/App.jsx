@@ -17,6 +17,7 @@ function App() {
           <Link to="/">Home</Link>
           <Link to="/services">Services</Link>
           <Link to="/contact">Contact & Appointment</Link>
+          <Link to="/admin">Admin Dashboard</Link>
         </div>
       </nav>
       <Routes>

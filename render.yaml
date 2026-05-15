@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ganga-devi-eye-hospital-api
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: ADMIN_TOKEN
+        value: gangadevirewari
+      - key: FRONTEND_ORIGIN
+        value: https://your-vercel-site.vercel.app

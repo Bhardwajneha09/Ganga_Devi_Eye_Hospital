@@ -8,37 +8,56 @@ export default function Admin() {
   const [newDoctor, setNewDoctor] = useState('');
   const [adminToken, setAdminTokenValue] = useState(() => localStorage.getItem('adminToken') || '');
   const [error, setError] = useState('');
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = async (tokenOverride) => {
+    const token = (tokenOverride ?? adminToken).trim();
+    if (!token) {
+      setError('Enter the admin token to view and manage bookings.');
+      setIsUnlocked(false);
+      return;
+    }
+
     try {
+      setIsLoading(true);
       setError('');
-      setAdminToken(adminToken);
+      setAdminToken(token);
       const appts = await api.get('/api/admin/appointments');
       setAppointments(appts.data);
       const docs = await api.get('/api/doctors');
       setDoctors(docs.data);
       const msgs = await api.get('/api/admin/messages');
       setMessages(msgs.data);
+      setIsUnlocked(true);
     } catch (err) {
+      setIsUnlocked(false);
       if (err.response?.status === 401) {
-        setError('Enter the admin token to view and manage bookings.');
+        setError('Admin token is incorrect. Please check it and try again.');
       } else {
         setError(err.response?.data?.error || 'Unable to load admin data.');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleAdminLogin = (e) => {
     e.preventDefault();
-    localStorage.setItem('adminToken', adminToken);
-    fetchData();
+    const token = adminToken.trim();
+    setAdminTokenValue(token);
+    localStorage.setItem('adminToken', token);
+    fetchData(token);
   };
 
   const handleAdminLogout = () => {
     localStorage.removeItem('adminToken');
     setAdminTokenValue('');
     setAdminToken('');
+    setError('');
+    setIsUnlocked(false);
     setAppointments([]);
+    setDoctors([]);
     setMessages([]);
   };
 
@@ -81,12 +100,15 @@ export default function Admin() {
           value={adminToken}
           onChange={e => setAdminTokenValue(e.target.value)}
         />
-        <button className="btn" type="submit">Unlock</button>
-        {adminToken && <button className="btn btn-secondary" type="button" onClick={handleAdminLogout}>Lock</button>}
+        <button className="btn" type="submit" disabled={isLoading}>{isLoading ? 'Checking...' : 'Unlock'}</button>
+        {(adminToken || isUnlocked) && <button className="btn btn-secondary" type="button" onClick={handleAdminLogout}>Lock</button>}
       </form>
       {error && <p className="form-error">{error}</p>}
+      {!isUnlocked && !error && (
+        <p className="admin-help">Enter the admin token to view appointments, doctor controls, and messages.</p>
+      )}
       
-      <div className="card" style={{ marginBottom: '2rem', textAlign: 'left' }}>
+      {isUnlocked && <div className="card" style={{ marginBottom: '2rem', textAlign: 'left' }}>
         <h3>Manage Appointments</h3>
         <table className="admin-table">
           <thead>
@@ -107,9 +129,9 @@ export default function Admin() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>}
 
-      <div className="card" style={{ marginBottom: '2rem', textAlign: 'left' }}>
+      {isUnlocked && <div className="card" style={{ marginBottom: '2rem', textAlign: 'left' }}>
         <h3>Manage Doctors</h3>
         <form onSubmit={handleAddDoctor} style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
           <input className="input-group" style={{ margin: 0, padding: '0.75rem', flex: 1 }} type="text" placeholder="Doctor Name & Speciality" value={newDoctor} onChange={e => setNewDoctor(e.target.value)} />
@@ -128,9 +150,9 @@ export default function Admin() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>}
 
-      <div className="card" style={{ textAlign: 'left' }}>
+      {isUnlocked && <div className="card" style={{ textAlign: 'left' }}>
         <h3>Manage Messages</h3>
         <table className="admin-table">
           <thead>
@@ -145,7 +167,7 @@ export default function Admin() {
             ))}
           </tbody>
         </table>
-      </div>
+      </div>}
     </div>
   );
 }
