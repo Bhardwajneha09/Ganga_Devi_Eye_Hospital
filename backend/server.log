@@ -1,0 +1,6 @@
+Server running on 0.0.0.0:5001
+Connected to the SQLite database.
+Failed to send notification email: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials 98e67ed59e1d1-3695155e332sm1777643a91.1 - gsmtp
+Failed to send notification email: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to
+535 5.7.8  https://support.google.com/mail/?p=BadCredentials d9443c01a7336-2bd5d234540sm46534295ad.79 - gsmtp

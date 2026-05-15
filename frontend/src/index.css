@@ -1,0 +1,241 @@
+:root {
+  --primary: #0284c7;
+  --secondary: #e0f2fe;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --bg-color: #f8fafc;
+  --white: #ffffff;
+  --border-color: #e2e8f0;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: var(--font-family);
+  background: var(--bg-color);
+  color: var(--text-dark);
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-align: center;
+}
+.btn:hover {
+  background: #0369a1;
+  transform: translateY(-2px);
+}
+.btn-danger {
+  background: #ef4444;
+}
+.btn-danger:hover {
+  background: #dc2626;
+}
+.btn-secondary {
+  background: var(--text-light);
+}
+.btn-secondary:hover {
+  background: var(--text-dark);
+}
+nav {
+  background: var(--white);
+  padding: 0.75rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.brand-logo {
+  width: 86px;
+  height: 52px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.1;
+}
+.nav-links {
+  display: flex;
+  gap: 2rem;
+}
+.nav-links a {
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover {
+  color: var(--primary);
+}
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+}
+.hero h1 {
+  font-size: 3rem;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+.hero p {
+  font-size: 1.25rem;
+  color: var(--text-light);
+  margin-bottom: 2rem;
+  max-width: 600px;
+}
+.section-title {
+  text-align: center;
+  font-size: 2.25rem;
+  margin: 3rem 0 2rem 0;
+  color: var(--text-dark);
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem 5%;
+}
+.card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  transition: transform 0.2s;
+  text-align: center;
+}
+.card:hover {
+  transform: translateY(-5px);
+}
+.card h3 {
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+.input-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+.input-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.input-group input, .input-group select, .input-group textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+.form-error {
+  display: block;
+  margin-top: 0.5rem;
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+.admin-login {
+  display: flex;
+  gap: 1rem;
+  max-width: 640px;
+  margin: 0 auto 2rem;
+}
+.admin-login input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.admin-table th, .admin-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+.admin-table th {
+  background: var(--secondary);
+  color: var(--primary);
+  font-weight: 600;
+}
+.contact-layout {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 5%;
+  flex-wrap: wrap;
+}
+.contact-info, .map-container {
+  flex: 1;
+  min-width: 300px;
+}
+footer {
+  background: var(--text-dark);
+  color: var(--white);
+  text-align: center;
+  padding: 2rem;
+  margin-top: 4rem;
+}
+
+@media (max-width: 760px) {
+  nav {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .brand-logo {
+    width: 72px;
+    height: 44px;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+  }
+
+  .nav-links {
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+  }
+}

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="70 150 590 330" role="img" aria-labelledby="title">
+  <title id="title">Ganga Devi Eye Hospital logo</title>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M130 382c80-126 199-194 342-203 29-2 57-1 83 2" stroke="#8fc8df" stroke-width="64"/>
+    <path d="M129 381c91-104 210-153 358-147 40 2 78 8 113 18" stroke="#4aa0d3" stroke-width="66"/>
+    <path d="M128 382c110-82 242-105 397-70 38 9 73 21 105 35" stroke="#1f78bd" stroke-width="75"/>
+    <path d="M235 420c71 35 161 41 256 10" stroke="#1f78bd" stroke-width="14"/>
+    <path d="M493 390c-28 34-69 54-113 54-70 0-126-51-126-114 0-62 50-111 112-111 45 0 82 25 99 62" stroke="#1f78bd" stroke-width="20"/>
+    <path d="M403 330h71v78h-82" stroke="#1f78bd" stroke-width="23"/>
+    <path d="M366 228c-45 7-80 48-80 98 0 57 43 102 95 102 27 0 52-12 70-31" stroke="#1f78bd" stroke-width="16"/>
+  </g>
+  <circle cx="349" cy="320" r="32" fill="#1f78bd"/>
+  <circle cx="361" cy="305" r="15" fill="#fff"/>
+</svg>
