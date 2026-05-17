@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from './api';
+import { saveLocalAppointment, saveLocalMessage } from './localStore';
 
 const defaultDoctors = [{ id: 1, name: 'Dr. Preeti Yadav' }];
 
@@ -7,6 +8,10 @@ export default function Contact() {
   const [doctors, setDoctors] = useState(defaultDoctors);
   const [apptData, setApptData] = useState({ name: '', phone: '', email: '', doctorId: '', date: '' });
   const [msgData, setMsgData] = useState({ name: '', email: '', message: '' });
+  const [appointmentStatus, setAppointmentStatus] = useState('');
+  const [messageStatus, setMessageStatus] = useState('');
+  const [isBooking, setIsBooking] = useState(false);
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
 
   useEffect(() => {
     api.get('/api/doctors')
@@ -16,23 +21,45 @@ export default function Contact() {
 
   const handleApptSubmit = async (e) => {
     e.preventDefault();
+    setIsBooking(true);
+    setAppointmentStatus('');
     try {
       await api.post('/api/appointments', apptData);
-      alert('Appointment booked successfully!');
+      setAppointmentStatus('Appointment booked successfully. The hospital will receive the notification when SMS is configured.');
       setApptData({ name: '', phone: '', email: '', doctorId: '', date: '' });
-    } catch {
-      alert('Failed to book appointment');
+    } catch (err) {
+      if (!err.response) {
+        saveLocalAppointment(apptData, doctors);
+        setAppointmentStatus('Backend is offline. Appointment saved locally for testing. Start the backend so it saves to the admin dashboard and sends SMS.');
+        setApptData({ name: '', phone: '', email: '', doctorId: '', date: '' });
+        return;
+      }
+
+      setAppointmentStatus(err.response?.data?.error || 'Failed to book appointment.');
+    } finally {
+      setIsBooking(false);
     }
   };
 
   const handleMsgSubmit = async (e) => {
     e.preventDefault();
+    setIsSendingMessage(true);
+    setMessageStatus('');
     try {
       await api.post('/api/messages', msgData);
-      alert('Message sent successfully!');
+      setMessageStatus('Message sent successfully.');
       setMsgData({ name: '', email: '', message: '' });
-    } catch {
-      alert('Failed to send message');
+    } catch (err) {
+      if (!err.response) {
+        saveLocalMessage(msgData);
+        setMessageStatus('Backend is offline. Message saved locally for testing. Start the backend so it saves to the admin dashboard.');
+        setMsgData({ name: '', email: '', message: '' });
+        return;
+      }
+
+      setMessageStatus(err.response?.data?.error || 'Failed to send message.');
+    } finally {
+      setIsSendingMessage(false);
     }
   };
 
@@ -67,7 +94,8 @@ export default function Contact() {
               <label>Choose Date</label>
               <input type="date" required value={apptData.date} onChange={e => setApptData({...apptData, date: e.target.value})} />
             </div>
-            <button type="submit" className="btn">Submit Appointment</button>
+            <button type="submit" className="btn" disabled={isBooking}>{isBooking ? 'Booking...' : 'Submit Appointment'}</button>
+            {appointmentStatus && <p className="form-note">{appointmentStatus}</p>}
           </form>
         </div>
 
@@ -86,7 +114,8 @@ export default function Contact() {
               <div className="input-group">
                  <textarea placeholder="Message" rows="3" required value={msgData.message} onChange={e => setMsgData({...msgData, message: e.target.value})}></textarea>
               </div>
-              <button type="submit" className="btn">Send Message</button>
+              <button type="submit" className="btn" disabled={isSendingMessage}>{isSendingMessage ? 'Sending...' : 'Send Message'}</button>
+              {messageStatus && <p className="form-note">{messageStatus}</p>}
             </form>
           </div>
           <div className="map-container">

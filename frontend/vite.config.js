@@ -9,7 +9,7 @@ export default defineConfig({
     open: true,
     allowedHosts: true,
     proxy: {
-      '/api': 'http://localhost:5000',
+      '/api': 'http://localhost:5055',
     }
   }
 })

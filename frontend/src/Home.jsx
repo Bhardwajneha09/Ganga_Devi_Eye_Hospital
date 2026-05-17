@@ -7,9 +7,9 @@ export default function Home() {
       <section className="hero">
         <h1>Welcome to Ganga Devi Eye Hospital</h1>
         <p>Providing the best, comprehensive and compassionate eye care for you and your family.</p>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Link to="/contact" className="btn">Book an Appointment</Link>
-          <a href="tel:9991712690" className="btn" style={{ background: '#25D366', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <a href="tel:9991712690" className="btn btn-with-icon" style={{ background: '#25D366' }}>
             <Phone size={20} /> Call Us Now
           </a>
         </div>

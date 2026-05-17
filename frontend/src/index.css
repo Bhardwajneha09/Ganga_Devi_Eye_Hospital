@@ -34,6 +34,26 @@ a {
   transition: all 0.2s;
   text-align: center;
 }
+.btn-with-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btn-icon,
+.btn-icon svg {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+}
+.btn-icon svg,
+.card-icon svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .btn:hover {
   background: #0369a1;
   transform: translateY(-2px);
@@ -141,6 +161,12 @@ nav {
   margin-bottom: 1rem;
   color: var(--primary);
 }
+.card-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  color: var(--primary);
+}
 .form-container {
   max-width: 600px;
   margin: 2rem auto;
@@ -170,6 +196,11 @@ nav {
   margin-top: 0.5rem;
   color: #b91c1c;
   font-size: 0.9rem;
+}
+.form-note {
+  margin-top: 0.75rem;
+  color: var(--text-dark);
+  line-height: 1.5;
 }
 .admin-help {
   max-width: 640px;
@@ -208,6 +239,10 @@ nav {
   background: var(--secondary);
   color: var(--primary);
   font-weight: 600;
+}
+.empty-cell {
+  color: var(--text-light);
+  text-align: center;
 }
 .contact-layout {
   display: flex;

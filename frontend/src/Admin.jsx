@@ -1,5 +1,17 @@
 import { useState } from 'react';
 import api, { setAdminToken } from './api';
+import { deleteLocalAppointment, deleteLocalMessage, getLocalAppointments, getLocalMessages } from './localStore';
+
+const defaultDoctors = [{ id: 1, name: 'Dr. Preeti Yadav' }];
+const localAdminToken = 'gangadevirewari';
+
+function EmptyRow({ colSpan, children }) {
+  return (
+    <tr>
+      <td colSpan={colSpan} className="empty-cell">{children}</td>
+    </tr>
+  );
+}
 
 export default function Admin() {
   const [appointments, setAppointments] = useState([]);
@@ -10,6 +22,7 @@ export default function Admin() {
   const [error, setError] = useState('');
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [usingLocalData, setUsingLocalData] = useState(false);
 
   const fetchData = async (tokenOverride) => {
     const token = (tokenOverride ?? adminToken).trim();
@@ -29,9 +42,20 @@ export default function Admin() {
       setDoctors(docs.data);
       const msgs = await api.get('/api/admin/messages');
       setMessages(msgs.data);
+      setUsingLocalData(false);
       setIsUnlocked(true);
     } catch (err) {
       setIsUnlocked(false);
+      if (!err.response && token === localAdminToken) {
+        setAppointments(getLocalAppointments());
+        setDoctors(defaultDoctors);
+        setMessages(getLocalMessages());
+        setUsingLocalData(true);
+        setError('Backend is offline. Showing appointments and messages saved in this browser.');
+        setIsUnlocked(true);
+        return;
+      }
+
       if (err.response?.status === 401) {
         setError('Admin token is incorrect. Please check it and try again.');
       } else {
@@ -56,6 +80,7 @@ export default function Admin() {
     setAdminToken('');
     setError('');
     setIsUnlocked(false);
+    setUsingLocalData(false);
     setAppointments([]);
     setDoctors([]);
     setMessages([]);
@@ -63,6 +88,12 @@ export default function Admin() {
 
   const handleDeleteAppt = async (id) => {
     if (window.confirm("Delete this appointment?")) {
+      if (usingLocalData) {
+        deleteLocalAppointment(id);
+        setAppointments(getLocalAppointments());
+        return;
+      }
+
       await api.delete(`/api/admin/appointments/${id}`);
       fetchData();
     }
@@ -70,6 +101,12 @@ export default function Admin() {
 
   const handleDeleteMsg = async (id) => {
     if (window.confirm("Delete this message?")) {
+      if (usingLocalData) {
+        deleteLocalMessage(id);
+        setMessages(getLocalMessages());
+        return;
+      }
+
       await api.delete(`/api/admin/messages/${id}`);
       fetchData();
     }
@@ -104,6 +141,9 @@ export default function Admin() {
         {(adminToken || isUnlocked) && <button className="btn btn-secondary" type="button" onClick={handleAdminLogout}>Lock</button>}
       </form>
       {error && <p className="form-error">{error}</p>}
+      {isUnlocked && usingLocalData && (
+        <p className="admin-help">These records are local test records from this browser. Render backend records will show here after deployment.</p>
+      )}
       {!isUnlocked && !error && (
         <p className="admin-help">Enter the admin token to view appointments, doctor controls, and messages.</p>
       )}
@@ -117,7 +157,7 @@ export default function Admin() {
             </tr>
           </thead>
           <tbody>
-            {appointments.map(a => (
+            {appointments.length ? appointments.map(a => (
               <tr key={a.id}>
                 <td>{a.id}</td>
                 <td>{a.date}</td>
@@ -126,7 +166,7 @@ export default function Admin() {
                 <td>{a.doctorName}</td>
                 <td><button className="btn btn-danger" onClick={() => handleDeleteAppt(a.id)}>Delete</button></td>
               </tr>
-            ))}
+            )) : <EmptyRow colSpan={6}>No appointments booked yet.</EmptyRow>}
           </tbody>
         </table>
       </div>}
@@ -142,12 +182,12 @@ export default function Admin() {
             <tr><th>ID</th><th>Name</th><th>Action</th></tr>
           </thead>
           <tbody>
-            {doctors.map(d => (
+            {doctors.length ? doctors.map(d => (
               <tr key={d.id}>
                 <td>{d.id}</td><td>{d.name}</td>
                 <td><button className="btn btn-danger" onClick={() => handleDeleteDoctor(d.id)}>Delete</button></td>
               </tr>
-            ))}
+            )) : <EmptyRow colSpan={3}>No doctors available yet.</EmptyRow>}
           </tbody>
         </table>
       </div>}
@@ -159,12 +199,12 @@ export default function Admin() {
             <tr><th>ID</th><th>Name</th><th>Email</th><th>Message</th><th>Action</th></tr>
           </thead>
           <tbody>
-            {messages.map(m => (
+            {messages.length ? messages.map(m => (
               <tr key={m.id}>
                 <td>{m.id}</td><td>{m.name}</td><td>{m.email}</td><td>{m.message}</td>
                 <td><button className="btn btn-danger" onClick={() => handleDeleteMsg(m.id)}>Delete</button></td>
               </tr>
-            ))}
+            )) : <EmptyRow colSpan={5}>No contact messages yet.</EmptyRow>}
           </tbody>
         </table>
       </div>}
