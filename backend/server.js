@@ -12,6 +12,11 @@ const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '';
 const databasePath = process.env.DATABASE_PATH || path.join(__dirname, 'database.json');
 const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
 const allowedOrigins = FRONTEND_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean);
+const corsOptions = allowedOrigins.includes('*')
+    ? undefined
+    : allowedOrigins.length
+        ? { origin: allowedOrigins }
+        : undefined;
 const hospitalSmsNumber = process.env.HOSPITAL_SMS_NUMBER || '+919991712690';
 const transporter = process.env.EMAIL_USER && process.env.EMAIL_PASS
     ? nodemailer.createTransport({
@@ -23,7 +28,7 @@ const transporter = process.env.EMAIL_USER && process.env.EMAIL_PASS
     })
     : null;
 
-app.use(cors(allowedOrigins.length ? { origin: allowedOrigins } : undefined));
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '20kb' }));
 
 const isBlank = (value) => typeof value !== 'string' || value.trim().length === 0;
