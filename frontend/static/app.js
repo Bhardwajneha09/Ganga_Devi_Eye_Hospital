@@ -2,6 +2,7 @@ const defaultDoctors = [{ id: 1, name: 'Dr. Preeti Yadav' }];
 const adminToken = 'gangadevirewari';
 const APPOINTMENTS_KEY = 'hospitalLocalAppointments';
 const MESSAGES_KEY = 'hospitalLocalMessages';
+const PRODUCTION_API_BASE_URL = 'https://ganga-devi-eye-hospital-2.onrender.com';
 
 function getApiBaseURL() {
   const configured = window.__API_BASE_URL__;
@@ -9,7 +10,7 @@ function getApiBaseURL() {
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return 'http://localhost:5055';
   }
-  return '';
+  return PRODUCTION_API_BASE_URL;
 }
 
 const apiBaseURL = getApiBaseURL();

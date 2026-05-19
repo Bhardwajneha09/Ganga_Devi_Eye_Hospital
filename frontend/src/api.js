@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const PRODUCTION_API_BASE_URL = 'https://ganga-devi-eye-hospital-2.onrender.com';
+
 function getApiBaseURL() {
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL;
@@ -9,7 +11,7 @@ function getApiBaseURL() {
     return 'http://localhost:5055';
   }
 
-  return '';
+  return PRODUCTION_API_BASE_URL;
 }
 
 const api = axios.create({
