@@ -6,7 +6,13 @@ services:
     buildCommand: npm install
     startCommand: npm start
     envVars:
+      - key: NODE_VERSION
+        value: 20.19.0
       - key: ADMIN_TOKEN
         value: gangadevirewari
       - key: FRONTEND_ORIGIN
-        value: https://your-vercel-site.vercel.app
+        value: '*'
+      - key: DATABASE_PATH
+        value: /tmp/database.json
+      - key: HOSPITAL_SMS_NUMBER
+        value: +919991712690
